@@ -43,6 +43,10 @@ class Blockchain(object):
 
         return self.last_block['index'] + 1
 
+    @property
+    def last_block(self):
+        return self.chain[-1]
+
     @staticmethod
     def hash(block):
         """
@@ -53,5 +57,29 @@ class Blockchain(object):
         block_string = json.dumps(block, sort_keys=True).encode()
         return  hashlib.sha256(block_string).hexdigest()
 
-    def last_block(self):
-        return self.chain[-1]
+    def proof_of_work(self, last_proof):
+        """
+        :param last_proof: <int>
+        :return: <int>
+        """
+
+        proof = 0
+        while self.valid_proof(last_proof, proof) is False:
+            proof += 1
+
+        return proof
+
+    @staticmethod
+    def valid_proof(last_proof, proof):
+        """
+        :param last_proof: <int> Previous Proof
+        :param proof: <int> Current Proof
+        :return: <bool> True if Correct, False Otherwise.
+        """
+
+        guess = f'{last_proof}{proof}'.encode()
+        guess_hash = hashlib.sha256(guess).hexdigest()
+        return guess_hash[:5] == "0000"
+
+
+
