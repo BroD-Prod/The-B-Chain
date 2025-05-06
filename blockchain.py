@@ -7,6 +7,9 @@ class Blockchain(object):
         self.chain = []
         self.current_transactions = []
 
+        #Gensis Block
+        self.new_block(previous_hash=1, proof=100)
+
     def new_block(self, proof, previous_hash=None):
         """
         :param proof: <int> Proof of Work Algo
@@ -79,7 +82,7 @@ class Blockchain(object):
 
         guess = f'{last_proof}{proof}'.encode()
         guess_hash = hashlib.sha256(guess).hexdigest()
-        return guess_hash[:5] == "0000"
+        return guess_hash[:3] == "000"
 
 
 
